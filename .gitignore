@@ -1,0 +1,17 @@
+# 依赖
+node_modules/
+.pnpm-store/
+
+# 构建产物（各包 lib/ 建议提交，保证 git 源安装无需构建；如需忽略请在各包内覆盖）
+# 本仓库策略：lib/ 提交。若改为忽略，安装源将要求构建步骤。
+
+# 编辑器 / 系统
+.DS_Store
+*.log
+.idea/
+.vscode/
+*.swp
+
+# 发布临时文件
+*.tgz
+dist/

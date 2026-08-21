@@ -1,0 +1,25 @@
+{
+  "name": "dsh-plugins",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DSH 插件总仓库：多插件 monorepo 开发 + 插件目录管理 + 插件安装源（registry / npm / GitHub 三通道）",
+  "type": "module",
+  "engines": {
+    "node": ">=22.19.0",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@11.7.0",
+  "scripts": {
+    "create": "node scripts/create-plugin.mjs",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "registry": "node scripts/build-registry.mjs",
+    "install:profile": "node scripts/install-to-profile.mjs",
+    "publish": "node scripts/publish.mjs",
+    "sync:github": "bash scripts/sync-github.sh"
+  },
+  "devDependencies": {
+    "tsdown": "^0.8.0",
+    "typescript": "^5.5.0"
+  }
+}

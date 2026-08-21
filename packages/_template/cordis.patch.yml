@@ -1,0 +1,8 @@
+# dsh-xxx bundle patch：把插件实例插入 DSH profile 名单。
+# 作为 profile bundle 层（package.json 的 dsh.bundle.patch 字段）叠加在 dsh-base 之上。
+#
+# 双面插件 = 一行裸插件实例：node 半（exports "."）跑在宿主进程，
+# dsh.client 声明使浏览器半（exports "./client"，服务路径 /plugins/<id>/client.js）在 web GUI 加载。
+- insert:
+    - id: xxx
+      name: 'dsh-xxx'

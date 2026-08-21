@@ -1,0 +1,3 @@
+# pnpm workspace：packages/ 下每个目录是一个可独立发布的 DSH 插件包
+packages:
+  - 'packages/*'
