@@ -1,0 +1,14 @@
+{
+  "name": "dsh-config-manager",
+  "owner": "xiajiajun516",
+  "fullName": "xiajiajun516/dsh-config-manager",
+  "url": "https://github.com/xiajiajun516/dsh-config-manager",
+  "description": "DSH 配置管理器：备份/导出/导入/迁移 DSH 配置（双面插件）",
+  "tags": [
+    "tool",
+    "workflow"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "xiajiajun516/dsh-config-manager"
+}

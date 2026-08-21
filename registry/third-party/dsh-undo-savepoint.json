@@ -1,0 +1,14 @@
+{
+  "name": "dsh-undo-savepoint",
+  "owner": "lire1131",
+  "fullName": "lire1131/dsh-undo-savepoint",
+  "url": "https://github.com/lire1131/dsh-undo-plugin",
+  "description": "DSH 撤销/回滚系统：配置变更自动快照、undo/redo、安全模式与崩溃恢复",
+  "tags": [
+    "workflow",
+    "tool"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "lire1131/dsh-undo-plugin"
+}

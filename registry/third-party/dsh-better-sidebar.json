@@ -1,0 +1,13 @@
+{
+  "name": "dsh-better-sidebar",
+  "owner": "omdsh-dev",
+  "fullName": "omdsh-dev/dsh-better-sidebar",
+  "url": "https://github.com/omdsh-dev/DSH-better-sidebar",
+  "description": "VSCode 式右侧边栏：资源管理器/编辑器/终端/git/浏览器",
+  "tags": [
+    "ui"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "npm": "dsh-better-sidebar"
+}

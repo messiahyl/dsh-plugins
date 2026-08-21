@@ -1,0 +1,13 @@
+{
+  "name": "dsh-web-ui-notify",
+  "owner": "bill9109",
+  "fullName": "bill9109/dsh-web-ui-notify",
+  "url": "https://github.com/bill9109/dsh-web-ui-notify",
+  "description": "DSH 桌面通知：审批/提问/回合完成时系统级通知",
+  "tags": [
+    "notification"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "bill9109/dsh-web-ui-notify"
+}

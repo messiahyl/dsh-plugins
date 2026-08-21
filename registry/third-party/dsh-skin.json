@@ -1,0 +1,14 @@
+{
+  "name": "dsh-skin",
+  "owner": "KinGao294",
+  "fullName": "KinGao294/dsh-skin",
+  "url": "https://github.com/KinGao294/dsh-skin",
+  "description": "皮肤切换 + 自定义壁纸：--dsw-alias-* 调色板、透明侧栏等",
+  "tags": [
+    "ui",
+    "skin"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "KinGao294/dsh-skin"
+}

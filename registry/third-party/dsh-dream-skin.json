@@ -1,0 +1,14 @@
+{
+  "name": "dsh-dream-skin",
+  "owner": "RevolutionLA",
+  "fullName": "RevolutionLA/dsh-dream-skin",
+  "url": "https://github.com/RevolutionLA/dsh-dream-skin",
+  "description": "Dream Skin 换肤：精选 --dsw-alias-* 主题预设",
+  "tags": [
+    "ui",
+    "skin"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "RevolutionLA/dsh-dream-skin"
+}

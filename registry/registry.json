@@ -3,18 +3,18 @@
     "schemaVersion": 1,
     "generatedAt": "stable",
     "source": "https://gitee.com/messiahyl/dsh-plugins",
-    "count": 2,
+    "count": 18,
     "localCount": 0,
-    "thirdPartyCount": 2,
+    "thirdPartyCount": 18,
     "archivedCount": 0
   },
   "plugins": [
     {
-      "name": "dsh-browser",
-      "owner": "community",
-      "fullName": "community/dsh-browser",
-      "url": "https://www.npmjs.com/package/dsh-browser",
-      "description": "DSH 浏览器自动化工具：网页测试、表单填写、截图与数据提取",
+      "name": "dsh-auto-memory",
+      "owner": "Aik358",
+      "fullName": "Aik358/dsh-auto-memory",
+      "url": "https://github.com/Aik358/dsh-auto-memory",
+      "description": "DSH 自动记忆插件：三层记忆（用户级/项目笔记/每日日志）自动注入与检索、每轮自动沉淀、每日反思、可视化面板，支持继承其他 AI 工具记忆",
       "stars": 0,
       "forks": 0,
       "openIssues": 0,
@@ -23,11 +23,368 @@
       "source": "third-party",
       "verified": false,
       "install": {
-        "npm": "dsh-browser"
+        "github": "Aik358/dsh-auto-memory"
       },
       "archive": null,
       "tags": [
+        "workflow",
+        "memory"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-automation",
+      "owner": "titanwings",
+      "fullName": "titanwings/dsh-automation",
+      "url": "https://github.com/titanwings/dsh-automation",
+      "description": "DSH 定时任务：在新 Agent 会话中按计划运行编码任务，GUI 管理自动化",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "titanwings/dsh-automation"
+      },
+      "archive": null,
+      "tags": [
+        "workflow"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-better-sidebar",
+      "owner": "omdsh-dev",
+      "fullName": "omdsh-dev/dsh-better-sidebar",
+      "url": "https://github.com/omdsh-dev/DSH-better-sidebar",
+      "description": "VSCode 式右侧边栏：资源管理器/编辑器/终端/git/浏览器",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "npm": "dsh-better-sidebar"
+      },
+      "archive": null,
+      "tags": [
+        "ui"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-browser",
+      "owner": "ben7am1n",
+      "fullName": "ben7am1n/dsh-browser",
+      "url": "https://github.com/ben7am1n/dsh-browser",
+      "description": "DSH 浏览器自动化：Playwright 驱动，开页/点击/输入/截图/评估",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "ben7am1n/dsh-browser"
+      },
+      "archive": null,
+      "tags": [
+        "tool",
+        "dev"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-chinese-mode",
+      "owner": "dawnliming",
+      "fullName": "dawnliming/dsh-chinese-mode",
+      "url": "https://github.com/dawnliming/dsh-chinese-mode",
+      "description": "DSH 全局中文模式：输入框胶囊开关，向 preset 注入语言要求，区域/锚定/思考可单独配置",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "dawnliming/dsh-chinese-mode"
+      },
+      "archive": null,
+      "tags": [
+        "workflow",
+        "ui"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-config-manager",
+      "owner": "xiajiajun516",
+      "fullName": "xiajiajun516/dsh-config-manager",
+      "url": "https://github.com/xiajiajun516/dsh-config-manager",
+      "description": "DSH 配置管理器：备份/导出/导入/迁移 DSH 配置（双面插件）",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "xiajiajun516/dsh-config-manager"
+      },
+      "archive": null,
+      "tags": [
+        "tool",
+        "workflow"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-douyin",
+      "owner": "dsh-external",
+      "fullName": "dsh-external/dsh-douyin",
+      "url": "https://github.com/dsh-external/dsh-douyin",
+      "description": "DSH WebUI 侧栏短视频：原生播放器、系列选择、直链解析、历史回放与自动连播",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "dsh-external/dsh-douyin"
+      },
+      "archive": null,
+      "tags": [
+        "fun",
+        "ui"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-dream-skin",
+      "owner": "RevolutionLA",
+      "fullName": "RevolutionLA/dsh-dream-skin",
+      "url": "https://github.com/RevolutionLA/dsh-dream-skin",
+      "description": "Dream Skin 换肤：精选 --dsw-alias-* 主题预设",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "RevolutionLA/dsh-dream-skin"
+      },
+      "archive": null,
+      "tags": [
+        "ui",
+        "skin"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-inspiration-deck-workshop",
+      "owner": "zjsthmjialin",
+      "fullName": "zjsthmjialin/dsh-inspiration-deck-workshop",
+      "url": "https://github.com/zjsthmjialin/inspiration-deck-workshop",
+      "description": "灵感演示工坊 DSH 插件化分发：本地 HTML 演示文稿工作台，6 套模板 25+ 布局",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "zjsthmjialin/inspiration-deck-workshop"
+      },
+      "archive": null,
+      "tags": [
+        "dev",
+        "workflow"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-lsp-actions",
+      "owner": "PerryLink",
+      "fullName": "PerryLink/dsh-lsp-actions",
+      "url": "https://github.com/PerryLink/dsh-lsp-actions",
+      "description": "LSP 动作面板：诊断/格式化/补全/代码动作",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "PerryLink/dsh-lsp-actions"
+      },
+      "archive": null,
+      "tags": [
+        "dev"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-mcp-manager",
+      "owner": "Nichts0v0",
+      "fullName": "Nichts0v0/dsh-mcp-manager",
+      "url": "https://github.com/Nichts0v0/dsh-mcp-manager",
+      "description": "MCP 服务器管理：Web 设置页管理 MCP server，存储/启停/编辑",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "Nichts0v0/dsh-mcp-manager"
+      },
+      "archive": null,
+      "tags": [
+        "tool",
+        "dev"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-plugin-manager",
+      "owner": "2768651338",
+      "fullName": "2768651338/dsh-plugin-manager",
+      "url": "https://github.com/2768651338/dsh-plugin-manager",
+      "description": "插件管家：图形化插件管理，中文名与用途目录 + 一键启停（写全局 cordis.patch.yml 热生效）",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "2768651338/dsh-plugin-manager"
+      },
+      "archive": null,
+      "tags": [
+        "ui",
+        "workflow"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-plugin-sync",
+      "owner": "AngLi1997",
+      "fullName": "AngLi1997/dsh-plugin-sync",
+      "url": "https://github.com/AngLi1997/dsh-plugin-sync",
+      "description": "DSH 插件同步：已安装插件清单同步到 GitHub Gist（OAuth 登录，导出/导入后自动装依赖）",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "AngLi1997/dsh-plugin-sync"
+      },
+      "archive": null,
+      "tags": [
+        "workflow",
         "tool"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-skin",
+      "owner": "KinGao294",
+      "fullName": "KinGao294/dsh-skin",
+      "url": "https://github.com/KinGao294/dsh-skin",
+      "description": "皮肤切换 + 自定义壁纸：--dsw-alias-* 调色板、透明侧栏等",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "KinGao294/dsh-skin"
+      },
+      "archive": null,
+      "tags": [
+        "ui",
+        "skin"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-undo-savepoint",
+      "owner": "lire1131",
+      "fullName": "lire1131/dsh-undo-savepoint",
+      "url": "https://github.com/lire1131/dsh-undo-plugin",
+      "description": "DSH 撤销/回滚系统：配置变更自动快照、undo/redo、安全模式与崩溃恢复",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "lire1131/dsh-undo-plugin"
+      },
+      "archive": null,
+      "tags": [
+        "workflow",
+        "tool"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dsh-web-ui-notify",
+      "owner": "bill9109",
+      "fullName": "bill9109/dsh-web-ui-notify",
+      "url": "https://github.com/bill9109/dsh-web-ui-notify",
+      "description": "DSH 桌面通知：审批/提问/回合完成时系统级通知",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "bill9109/dsh-web-ui-notify"
+      },
+      "archive": null,
+      "tags": [
+        "notification"
       ],
       "license": "MIT",
       "language": "TypeScript"
@@ -47,6 +404,30 @@
       "verified": false,
       "install": {
         "github": "loguhan/dsh-workshop"
+      },
+      "archive": null,
+      "tags": [
+        "ui",
+        "workflow"
+      ],
+      "license": "MIT",
+      "language": "TypeScript"
+    },
+    {
+      "name": "dshmarket",
+      "owner": "dsh-market",
+      "fullName": "dsh-market/dshmarket",
+      "url": "https://github.com/dsh-market/dsh-market",
+      "description": "DSH 可视化插件市场：浏览、搜索、一键安装社区插件",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "dsh-market/dsh-market"
       },
       "archive": null,
       "tags": [

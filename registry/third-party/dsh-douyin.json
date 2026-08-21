@@ -1,0 +1,14 @@
+{
+  "name": "dsh-douyin",
+  "owner": "dsh-external",
+  "fullName": "dsh-external/dsh-douyin",
+  "url": "https://github.com/dsh-external/dsh-douyin",
+  "description": "DSH WebUI 侧栏短视频：原生播放器、系列选择、直链解析、历史回放与自动连播",
+  "tags": [
+    "fun",
+    "ui"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "dsh-external/dsh-douyin"
+}

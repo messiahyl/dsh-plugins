@@ -1,0 +1,14 @@
+{
+  "name": "dsh-mcp-manager",
+  "owner": "Nichts0v0",
+  "fullName": "Nichts0v0/dsh-mcp-manager",
+  "url": "https://github.com/Nichts0v0/dsh-mcp-manager",
+  "description": "MCP 服务器管理：Web 设置页管理 MCP server，存储/启停/编辑",
+  "tags": [
+    "tool",
+    "dev"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "Nichts0v0/dsh-mcp-manager"
+}

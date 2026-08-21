@@ -1,0 +1,13 @@
+{
+  "name": "dsh-automation",
+  "owner": "titanwings",
+  "fullName": "titanwings/dsh-automation",
+  "url": "https://github.com/titanwings/dsh-automation",
+  "description": "DSH 定时任务：在新 Agent 会话中按计划运行编码任务，GUI 管理自动化",
+  "tags": [
+    "workflow"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "titanwings/dsh-automation"
+}

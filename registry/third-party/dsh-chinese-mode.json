@@ -1,0 +1,14 @@
+{
+  "name": "dsh-chinese-mode",
+  "owner": "dawnliming",
+  "fullName": "dawnliming/dsh-chinese-mode",
+  "url": "https://github.com/dawnliming/dsh-chinese-mode",
+  "description": "DSH 全局中文模式：输入框胶囊开关，向 preset 注入语言要求，区域/锚定/思考可单独配置",
+  "tags": [
+    "workflow",
+    "ui"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "dawnliming/dsh-chinese-mode"
+}

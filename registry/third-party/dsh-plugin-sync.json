@@ -1,0 +1,14 @@
+{
+  "name": "dsh-plugin-sync",
+  "owner": "AngLi1997",
+  "fullName": "AngLi1997/dsh-plugin-sync",
+  "url": "https://github.com/AngLi1997/dsh-plugin-sync",
+  "description": "DSH 插件同步：已安装插件清单同步到 GitHub Gist（OAuth 登录，导出/导入后自动装依赖）",
+  "tags": [
+    "workflow",
+    "tool"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "AngLi1997/dsh-plugin-sync"
+}

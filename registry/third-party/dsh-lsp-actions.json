@@ -1,0 +1,13 @@
+{
+  "name": "dsh-lsp-actions",
+  "owner": "PerryLink",
+  "fullName": "PerryLink/dsh-lsp-actions",
+  "url": "https://github.com/PerryLink/dsh-lsp-actions",
+  "description": "LSP 动作面板：诊断/格式化/补全/代码动作",
+  "tags": [
+    "dev"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "PerryLink/dsh-lsp-actions"
+}

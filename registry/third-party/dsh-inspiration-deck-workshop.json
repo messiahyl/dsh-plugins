@@ -1,0 +1,14 @@
+{
+  "name": "dsh-inspiration-deck-workshop",
+  "owner": "zjsthmjialin",
+  "fullName": "zjsthmjialin/dsh-inspiration-deck-workshop",
+  "url": "https://github.com/zjsthmjialin/inspiration-deck-workshop",
+  "description": "灵感演示工坊 DSH 插件化分发：本地 HTML 演示文稿工作台，6 套模板 25+ 布局",
+  "tags": [
+    "dev",
+    "workflow"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "zjsthmjialin/inspiration-deck-workshop"
+}

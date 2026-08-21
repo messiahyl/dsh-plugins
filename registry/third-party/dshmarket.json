@@ -1,0 +1,14 @@
+{
+  "name": "dshmarket",
+  "owner": "dsh-market",
+  "fullName": "dsh-market/dshmarket",
+  "url": "https://github.com/dsh-market/dsh-market",
+  "description": "DSH 可视化插件市场：浏览、搜索、一键安装社区插件",
+  "tags": [
+    "ui",
+    "workflow"
+  ],
+  "license": "MIT",
+  "language": "TypeScript",
+  "github": "dsh-market/dsh-market"
+}

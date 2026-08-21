@@ -1,11 +1,14 @@
 {
   "name": "dsh-browser",
-  "owner": "community",
-  "fullName": "community/dsh-browser",
-  "url": "https://www.npmjs.com/package/dsh-browser",
-  "description": "DSH 浏览器自动化工具：网页测试、表单填写、截图与数据提取",
-  "tags": ["tool"],
+  "owner": "ben7am1n",
+  "fullName": "ben7am1n/dsh-browser",
+  "url": "https://github.com/ben7am1n/dsh-browser",
+  "description": "DSH 浏览器自动化：Playwright 驱动，开页/点击/输入/截图/评估",
+  "tags": [
+    "tool",
+    "dev"
+  ],
   "license": "MIT",
   "language": "TypeScript",
-  "npm": "dsh-browser"
+  "github": "ben7am1n/dsh-browser"
 }
