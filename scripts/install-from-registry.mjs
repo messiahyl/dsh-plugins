@@ -9,17 +9,19 @@
  *   node scripts/install-from-registry.mjs <插件名>          # auto 选通道
  *   node scripts/install-from-registry.mjs <插件名> --source local
  *   node scripts/install-from-registry.mjs <插件名> --profile web
+ *   node scripts/install-from-registry.mjs <插件名> --no-verify   # 索引无 checksum 时强制安装（信任来源才用）
  *   node scripts/install-from-registry.mjs --list            # 列出索引全部插件
  *   node scripts/install-from-registry.mjs --list --remote   # 拉取远端索引（Gitee raw）
  *
  * 依赖：node >= 18（内置 fetch）
  */
-import { execSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import { readFileSync, writeFileSync, mkdtempSync, rmSync, existsSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import { tmpdir } from 'node:os'
 import { join, dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { NPM_SPEC_RE, GITHUB_SPEC_RE } from './lib/names.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -35,6 +37,7 @@ const name = args.find((a) => !a.startsWith('--'))
 const source = opt('--source', 'auto')
 const profile = opt('--profile', 'web')
 const useRemote = has('--remote')
+const noVerify = has('--no-verify')
 
 if (has('--list')) {
   const reg = await loadRegistry(useRemote)
@@ -66,6 +69,31 @@ function sha256(buf) {
   return createHash('sha256').update(buf).digest('hex')
 }
 
+// ── 安全：install 字段白名单校验（索引数据不可信，禁止拼进 shell）──
+function assertSafeSpec(pick, plugin) {
+  const v = plugin.install?.[pick]
+  if (!v) return false
+  if (pick === 'npm' && !NPM_SPEC_RE.test(v)) {
+    console.error(`✗ install.npm 非法: ${v}`)
+    process.exit(1)
+  }
+  if (pick === 'github' && !GITHUB_SPEC_RE.test(v)) {
+    console.error(`✗ install.github 非法: ${v}`)
+    process.exit(1)
+  }
+  return true
+}
+
+// spawnSync 封装：不经 shell，参数数组直传
+function runDsh(args) {
+  const r = spawnSync('dsh', args, { stdio: 'inherit' })
+  if (r.error) {
+    console.error(`✗ 执行失败: ${r.error.message}（确认已安装 dsh CLI）`)
+    process.exit(1)
+  }
+  if (r.status !== 0) process.exit(r.status ?? 1)
+}
+
 // ── 主流程 ──
 const reg = await loadRegistry(useRemote)
 const plugin = reg.plugins.find((p) => p.name === name)
@@ -77,7 +105,7 @@ if (!plugin) {
 const channels = ['local', 'npm', 'github']
 const pick = source === 'auto' ? channels.find((c) => plugin.install?.[c]) : source
 
-if (!pick || !plugin.install?.[pick]) {
+if (!pick || !assertSafeSpec(pick, plugin)) {
   console.error(`✗ 通道 ${source} 不可用。可用: ${channels.filter((c) => plugin.install?.[c]).join(' / ')}`)
   process.exit(1)
 }
@@ -103,29 +131,24 @@ if (pick === 'local') {
       process.exit(1)
     }
     console.log('✓ sha256 校验通过')
+  } else if (noVerify) {
+    console.warn('! 索引无 checksum 且 --no-verify 已指定，跳过校验')
   } else {
-    console.warn('! 索引无 checksum，跳过校验（归档可能未重新生成索引）')
+    console.error('✗ 索引无 checksum，默认拒绝安装（归档可能未重新生成索引）。确认信任来源可加 --no-verify 强制安装')
+    process.exit(1)
   }
   writeFileSync(tgzPath, buf)
   try {
-    execSync(`dsh plugin --profile ${profile} add file:${tgzPath}`, { stdio: 'inherit' })
+    runDsh(['plugin', '--profile', profile, 'add', `file:${tgzPath}`])
     console.log(`✓ ${plugin.name} 安装完成（归档 ${plugin.archive.file}）`)
-  } catch (e) {
-    console.error(`✗ 安装失败: ${e.message}`)
-    process.exit(1)
   } finally {
     rmSync(tmp, { recursive: true, force: true })
   }
 } else {
   const spec = pick === 'npm' ? plugin.install.npm : `github:${plugin.install.github}`
   console.log(`→ 安装: dsh plugin --profile ${profile} add ${spec}`)
-  try {
-    execSync(`dsh plugin --profile ${profile} add ${spec}`, { stdio: 'inherit' })
-    console.log(`✓ ${plugin.name} 安装完成`)
-  } catch (e) {
-    console.error(`✗ 安装失败: ${e.message}`)
-    process.exit(1)
-  }
+  runDsh(['plugin', '--profile', profile, 'add', spec])
+  console.log(`✓ ${plugin.name} 安装完成`)
 }
 
 console.log('\n完成。请重启 dsh web 使 bundle 插件生效。')

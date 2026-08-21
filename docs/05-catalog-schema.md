@@ -30,7 +30,7 @@
 | `source` | `"local"` \| `"third-party"` | ✅ | 来源 |
 | `install` | object | 本地 | 安装通道：`local` / `npm` / `gitee` / `github` |
 | `archive` | object \| null | 本地 | 安装包归档：`{ file, version, checksum }`，无归档为 null |
-| `verified` | boolean | ✅ | 是否经本仓库审查（本地插件=true，第三方默认 false） |
+| `verified` | boolean | ✅ | 是否经本仓库审查（本地插件=true；**第三方恒 false**，不可自证背书） |
 | `tags` | string[] | | 分类标签（tool / ui / workflow / notification / dev / fun） |
 | `license` | string | | 许可证 |
 | `language` | string | | 主要语言 |

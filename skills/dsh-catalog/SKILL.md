@@ -19,7 +19,7 @@ description: 维护 DSH 插件安装源目录（registry）。当用户要求管
 ## 工作流
 
 1. **本地插件变更**：改 `packages/` 后执行 `node scripts/pack.mjs`（可选，用于归档）与 `node scripts/build-registry.mjs` 重新生成。
-2. **收录第三方**：在 `registry/third-party/<name>.json` 写元数据（name 必填；url/description/tags/license 建议齐全；`verified: false` 默认），再生成。
+2. **收录第三方**：在 `registry/third-party/<name>.json` 写元数据（name 必填；url/description/tags/license 建议齐全；`verified` 恒为 false，不可自填；不开放 install/archive 字段），再生成。
 3. **发布目录**：
    ```sh
    git add registry/ && git commit -m "chore(registry): update catalog"

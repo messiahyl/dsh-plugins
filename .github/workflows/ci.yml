@@ -20,8 +20,8 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: 安装依赖
-        run: pnpm install --no-frozen-lockfile
+      - name: 安装依赖（锁文件一致性）
+        run: pnpm install --frozen-lockfile
 
       - name: 类型检查（全部包）
         run: pnpm -r typecheck
@@ -29,8 +29,10 @@ jobs:
       - name: 构建（全部包）
         run: pnpm -r build
 
-      - name: 生成安装源索引
-        run: node scripts/build-registry.mjs
+      - name: 重新打包归档 + 生成索引（验证与提交内容一致）
+        run: |
+          node scripts/pack.mjs
+          node scripts/build-registry.mjs
 
-      - name: 索引一致性校验（生成后不得有差异）
-        run: git diff --exit-code registry/registry.json || (echo '::error::registry/registry.json 过期，请运行 node scripts/build-registry.mjs 后提交' && exit 1)
+      - name: 一致性校验（registry/ 生成后不得有差异：索引 + 归档）
+        run: git diff --exit-code registry/ || (echo '::error::registry/ 过期或归档缺失，请运行 node scripts/pack.mjs && node scripts/build-registry.mjs 后提交' && exit 1)

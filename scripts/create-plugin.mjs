@@ -7,9 +7,10 @@
  *
  * 行为：复制 packages/_template 到 packages/<name>，替换包名、cordis id、client banner id。
  */
-import { cpSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs'
+import { cpSync, readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { join, dirname, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { isValidPackageName, cordisIdOf } from './lib/names.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -31,9 +32,9 @@ if (name.startsWith('@')) {
 } else if (!name.startsWith('dsh-')) {
   name = `dsh-${name}`
 }
-const cordisId = name.startsWith('@') ? name.split('/')[1].replace(/^dsh-/, '') : name.replace(/^dsh-/, '')
+const cordisId = cordisIdOf(name)
 
-if (!/^(@[\w-]+\/)?dsh-[\w-]+$/.test(name)) {
+if (!isValidPackageName(name)) {
   console.error(`非法插件名: ${name}（应形如 dsh-xxx 或 @scope/dsh-xxx）`)
   process.exit(1)
 }

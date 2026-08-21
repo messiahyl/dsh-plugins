@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generatedAt": "2026-08-21T15:15:09.064Z",
+    "generatedAt": "2026-08-21T15:49:17.734Z",
     "source": "https://gitee.com/messiahyl/dsh-plugins",
     "count": 2,
     "localCount": 0,
@@ -9,6 +9,11 @@
   },
   "plugins": [
     {
+      "name": "dsh-browser",
+      "owner": "community",
+      "fullName": "community/dsh-browser",
+      "url": "https://www.npmjs.com/package/dsh-browser",
+      "description": "DSH 浏览器自动化工具：网页测试、表单填写、截图与数据提取",
       "stars": 0,
       "forks": 0,
       "openIssues": 0,
@@ -19,15 +24,15 @@
       "tags": [
         "tool"
       ],
-      "name": "dsh-browser",
-      "owner": "community",
-      "fullName": "community/dsh-browser",
-      "url": "https://www.npmjs.com/package/dsh-browser",
-      "description": "DSH 浏览器自动化工具：网页测试、表单填写、截图与数据提取",
       "license": "MIT",
       "language": "TypeScript"
     },
     {
+      "name": "dsh-workshop",
+      "owner": "loguhan",
+      "fullName": "loguhan/dsh-workshop",
+      "url": "https://github.com/loguhan/dsh-workshop",
+      "description": "Steam Workshop 风格的 DSH 插件商店：浏览、搜索、一键安装社区插件，镜像加速与安全校验",
       "stars": 0,
       "forks": 0,
       "openIssues": 0,
@@ -39,11 +44,6 @@
         "ui",
         "workflow"
       ],
-      "name": "dsh-workshop",
-      "owner": "loguhan",
-      "fullName": "loguhan/dsh-workshop",
-      "url": "https://github.com/loguhan/dsh-workshop",
-      "description": "Steam Workshop 风格的 DSH 插件商店：浏览、搜索、一键安装社区插件，镜像加速与安全校验",
       "license": "MIT",
       "language": "TypeScript"
     }

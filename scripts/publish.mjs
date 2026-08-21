@@ -15,9 +15,11 @@
  * 注意：发布 = 对外运行你的代码。发布前确认包内无密钥、无调试残留。
  */
 import { execSync } from 'node:child_process'
-import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs'
+import { readFileSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { isValidPackageName } from './lib/names.mjs'
+import { scanPackage } from './lib/scan-secrets.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -30,6 +32,10 @@ const dryRun = args.includes('--dry-run')
 
 if (!name) {
   console.error('用法: node scripts/publish.mjs <包名> [patch|minor|major] [--no-npm] [--dry-run]')
+  process.exit(1)
+}
+if (!isValidPackageName(name)) {
+  console.error(`✗ 非法插件名: ${name}（应形如 dsh-xxx 或 @scope/dsh-xxx）`)
   process.exit(1)
 }
 
@@ -57,45 +63,25 @@ const next = bump === 'major' ? `${major + 1}.0.0`
   : bump === 'minor' ? `${major}.${minor + 1}.0`
   : `${major}.${minor}.${patch + 1}`
 
-// 1.5 密钥扫描：发布前检查 src/ 与包根文本文件里的敏感模式
-const SECRET_PATTERNS = [
-  [/AKIA[0-9A-Z]{16}/, 'AWS Access Key'],
-  [/sk-[A-Za-z0-9]{20,}/, 'sk- API key'],
-  [/-----BEGIN (RSA |EC |OPENSSH |PRIVATE )?KEY-----/, '私钥块'],
-  [/(password|passwd|secret|api[_-]?key|access[_-]?token)\s*[:=]\s*["'][^"']{8,}/i, '明文密钥赋值'],
-]
-function walk(dir, acc = []) {
-  for (const f of readdirSync(dir)) {
-    const p = join(dir, f)
-    if (f === 'node_modules' || f === 'lib' || f === '.git') continue
-    if (statSync(p).isDirectory()) walk(p, acc)
-    else if (/\.(ts|tsx|js|mjs|json|yml|yaml|md|env)$/.test(f)) acc.push(p)
-  }
-  return acc
-}
-const secretHits = []
-for (const file of walk(join(ROOT, 'packages', name))) {
-  const text = readFileSync(file, 'utf8')
-  for (const [re, label] of SECRET_PATTERNS) {
-    if (re.test(text)) secretHits.push(`${file.replace(ROOT + '/', '')} — 疑似${label}`)
-  }
-}
-if (secretHits.length > 0) {
-  console.error('✗ 检测到疑似密钥，中止发布（确认误报可删除相关行后重试）：')
-  for (const h of secretHits) console.error(`    ${h}`)
-  process.exit(1)
-}
-
 console.log(`→ ${pkg.name}: ${pkg.version} -> ${next}（${bump}${dryRun ? '，dry-run 不落盘' : ''}）`)
 
 if (!dryRun) {
   execSync(`pnpm version ${bump} --no-git-tag-version`, { cwd: join(ROOT, 'packages', name), stdio: 'inherit' })
-  // 聚合更新根 registry 里引用的版本
 }
 
-// 2. 构建 + 类型检查
+// 2. 构建 + 类型检查（扫描对象 = 构建后的最终发布产物，先构建）
 execSync('pnpm run build && pnpm run typecheck', { cwd: join(ROOT, 'packages', name), stdio: 'inherit' })
 console.log('✓ 构建完成')
+
+// 2.5 密钥扫描：对 npm 实际发布内容（files 白名单含 lib/，不限扩展名）执行
+const pkgAfter = JSON.parse(readFileSync(pkgPath, 'utf8')) // version bump 后重读
+const secretHits = scanPackage(join(ROOT, 'packages', name), pkgAfter)
+if (secretHits.length > 0) {
+  console.error('✗ 发布产物中检测到疑似密钥，中止发布（确认误报请删除相关行后重试）：')
+  for (const h of secretHits) console.error(`    ${h.file} — 疑似${h.label}`)
+  process.exit(1)
+}
+console.log(`✓ 密钥扫描通过（${secretHits.length} 处命中）`)
 
 // 3. npm 发布
 if (!noNpm && !dryRun) {

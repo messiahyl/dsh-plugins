@@ -72,6 +72,8 @@ for (const dir of readdirSync(join(ROOT, 'packages'))) {
 }
 
 // ── 2. 第三方收录 ──
+// 白名单合并：只取展示字段，强制 verified=false（第三方不得自证背书），
+// 不开放 install/archive 字段（避免第三方伪造安装通道/校验和）。
 const tpDir = join(ROOT, 'registry', 'third-party')
 for (const file of readdirSync(tpDir).filter((f) => f.endsWith('.json'))) {
   try {
@@ -81,15 +83,21 @@ for (const file of readdirSync(tpDir).filter((f) => f.endsWith('.json'))) {
       continue
     }
     plugins.push({
+      name: item.name,
+      owner: item.owner ?? '',
+      fullName: item.fullName ?? item.name,
+      url: item.url ?? '',
+      description: item.description ?? '',
       stars: 0,
       forks: 0,
       openIssues: 0,
       archived: false,
       fork: false,
       source: 'third-party',
-      verified: false,
-      tags: [],
-      ...item,
+      verified: false, // 强制恒 false：背书需走独立维护者清单，见 registry/README
+      tags: item.tags ?? [],
+      license: item.license ?? 'MIT',
+      language: item.language ?? 'Unknown',
     })
   } catch (e) {
     console.warn(`跳过 ${file}: ${e.message}`)

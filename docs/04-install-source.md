@@ -75,6 +75,9 @@ dsh plugin --profile web add github:<owner>/dsh-plugins#path:packages/dsh-ssh
 
 ## 安全边界
 
-- registry 收录 ≠ 安全背书：第三方插件代码不在仓库内，安装 = 本机运行作者代码。
+- registry 收录 ≠ 安全背书：第三方插件代码不在仓库内，安装 = 本机运行作者代码；`verified` 恒为 false，背书需独立维护者清单。
+- **依赖生命周期脚本风险（postinstall）**：插件的 npm 依赖可能带 `postinstall`/`build` 脚本（如原生模块、下载二进制），安装时会在本机执行任意代码。消费端建议用 pnpm 的
+  `onlyBuiltDependencies` / `ignoredBuiltDependencies` 白名单机制限制，并审查插件依赖。
 - 有执行/写文件/高成本操作的插件，安装文档必须注明，agent 侧工具要求先确认。
+- 归档校验：安装器默认要求索引携带 sha256 checksum，缺失/不匹配默认拒绝（`--no-verify` 是显式逃生口，仅信任来源时使用）。
 - dsh web 若暴露公网，安装类接口应做来源校验（参考 dsh-workshop 的同源拒绝策略）。

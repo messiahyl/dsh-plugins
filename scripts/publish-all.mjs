@@ -12,9 +12,11 @@
  * 版本号不在本脚本递增（避免误批量升版），需要升版请逐包 node scripts/publish.mjs <pkg> patch。
  */
 import { execSync } from 'node:child_process'
-import { readdirSync, existsSync } from 'node:fs'
+import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { isValidPackageName } from './lib/names.mjs'
+import { scanPackage } from './lib/scan-secrets.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -34,10 +36,24 @@ if (targets.length === 0) {
 console.log(`→ 待发布 ${targets.length} 个插件: ${targets.join(', ')}`)
 if (dryRun) console.log('（dry-run 模式：只构建，不发布/不落盘）')
 
-// 1. 全部 typecheck + build
+// 1. 全部 typecheck + build + 密钥扫描（与 publish.mjs 同门禁）
 for (const t of targets) {
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'packages', t, 'package.json'), 'utf8'))
+  if (!isValidPackageName(pkg.name)) {
+    console.error(`✗ ${t}: 非法包名 ${pkg.name}，跳过`)
+    continue
+  }
   console.log(`\n→ 构建 ${t}`)
   execSync('pnpm run typecheck && pnpm run build', { cwd: join(ROOT, 'packages', t), stdio: 'inherit' })
+
+  // 构建后对最终发布产物（files 白名单含 lib/）扫描
+  const hits = scanPackage(join(ROOT, 'packages', t), pkg)
+  if (hits.length > 0) {
+    console.error(`✗ ${t}: 发布产物检测到疑似密钥，中止全部发布：`)
+    for (const h of hits) console.error(`    ${h.file} — 疑似${h.label}`)
+    process.exit(1)
+  }
+  console.log(`✓ ${t} 密钥扫描通过`)
 }
 
 // 2. npm 发布（可选）
