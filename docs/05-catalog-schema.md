@@ -28,7 +28,7 @@
 | `description` | string | ✅ | 一句话描述（中英皆可） |
 | `version` | string | 本地 | 当前版本 |
 | `source` | `"local"` \| `"third-party"` | ✅ | 来源 |
-| `install` | object | 本地 | 安装通道：`local` / `npm` / `gitee` / `github` |
+| `install` | object | 本地 | 安装通道：`local` / `npm` / `github`（本地插件全有；第三方仅有收录者声明的受控 npm/github） |
 | `archive` | object \| null | 本地 | 安装包归档：`{ file, version, checksum }`，无归档为 null |
 | `verified` | boolean | ✅ | 是否经本仓库审查（本地插件=true；**第三方恒 false**，不可自证背书） |
 | `tags` | string[] | | 分类标签（tool / ui / workflow / notification / dev / fun） |
@@ -45,8 +45,7 @@
   "install": {
     "local":  "https://gitee.com/messiahyl/dsh-plugins/raw/master/registry/packages/dsh-ssh-0.2.6.tgz",
     "npm":    "dsh-ssh",
-    "gitee":  "https://gitee.com/messiahyl/dsh-plugins#path:packages/dsh-ssh",
-    "github": "github.com/messiahyl/dsh-plugins#path:packages/dsh-ssh"
+    "github": "messiahyl/dsh-plugins#path:packages/dsh-ssh"
   },
   "archive": { "file": "dsh-ssh-0.2.6.tgz", "version": "0.2.6", "checksum": "sha256hex..." }
 }
@@ -54,11 +53,15 @@
 
 `install.local`、`archive`（含 `checksum`）由 build-registry.mjs 扫描 `registry/packages/` 自动填充。
 安装器建议的通道优先级：**local（免网络 + 校验和）→ npm → github**。
+`install.github` 为 `owner/repo#path:...` 形式（无 `github:` 前缀、无域名），消费端拼 `github:` 前缀即合法。
 
 ## 兼容性说明
 
-- **兼容 dsh-recommend**：`name/owner/fullName/url/description/stars/forks/openIssues/archived/fork/language/license` 字段名一致，消费端可按相同逻辑渲染。
-- **自有扩展**：`version/source/install/verified/tags` 为安装执行提供信息，不影响兼容字段消费。
+- **字段兼容 dsh-recommend（展示子集）**：`name/owner/fullName/url/description/stars/forks/openIssues/archived/fork/language/license` 字段名一致。
+  **注意：这不等于可被 dsh-recommend/workshop 自动消费**——workshop 固定读取 dsh-recommend 的
+  `data/registry.json`（含 score/signals/verification 等额外字段与独立 meta 结构），不会读取本仓库索引；
+  若要接入 workshop 需显式配置源并实测（见 `docs/04`）。
+- **自有扩展**：`version/source/install/verified/tags/archive/schemaVersion` 为安装执行提供信息，不影响兼容字段消费。
 
 ## 消费示例
 

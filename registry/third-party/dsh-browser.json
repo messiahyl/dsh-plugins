@@ -6,5 +6,6 @@
   "description": "DSH 浏览器自动化工具：网页测试、表单填写、截图与数据提取",
   "tags": ["tool"],
   "license": "MIT",
-  "language": "TypeScript"
+  "language": "TypeScript",
+  "npm": "dsh-browser"
 }

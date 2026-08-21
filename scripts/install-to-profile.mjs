@@ -15,7 +15,7 @@ import { execSync } from 'node:child_process'
 import { readdirSync, existsSync } from 'node:fs'
 import { join, dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { isValidPackageName } from './lib/names.mjs'
+import { isValidPackageName, pkgDirOf } from './lib/names.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -47,7 +47,7 @@ for (const t of targets) {
     console.warn(`跳过 ${t}: 非法插件名（应形如 dsh-xxx 或 @scope/dsh-xxx）`)
     continue
   }
-  const abs = resolve(ROOT, 'packages', t)
+  const abs = resolve(ROOT, 'packages', pkgDirOf(t))
   if (!existsSync(join(abs, 'package.json'))) {
     console.warn(`跳过 ${t}: 未找到 ${join(abs, 'package.json')}`)
     continue

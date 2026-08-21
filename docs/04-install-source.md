@@ -42,7 +42,9 @@ dsh plugin --profile web add file:./dsh-xxx-0.1.0.tgz
 
 ## 通道 B：registry.json（目录源）
 
-`registry/registry.json` 由 `node scripts/build-registry.mjs` 生成，兼容 dsh-recommend 字段超集。可被两类消费者使用：
+`registry/registry.json` 由 `node scripts/build-registry.mjs` 生成，字段兼容 dsh-recommend 的展示子集
+（name/owner/url/description/stars 等），并扩展自有字段（install/verified/archive/schemaVersion）。
+可被两类消费者使用：
 
 1. **workshop 风格安装器**：读取 registry → 展示卡片 → 按 `install` 通道（local → npm → github）执行安装。
 2. **自研/脚本**：解析 `install` 字段选择通道。

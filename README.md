@@ -6,7 +6,7 @@ DSH（DeepSeek Harness）插件总仓库：**多插件 monorepo 开发 + 插件�
 |------|------|------|
 | 📦 多插件开发 | `packages/*` 一个插件一个目录，pnpm workspace 统一管理 | [`docs/02-plugin-dev-guide.md`](docs/02-plugin-dev-guide.md) |
 | 🗂️ 插件管理 | 自有插件 + 第三方收录统一登记，生成安装源目录 | [`registry/README.md`](registry/README.md) |
-| 🔌 插件安装源 | 三通道：registry.json / npm / GitHub 镜像 | [`docs/04-install-source.md`](docs/04-install-source.md) |
+| 🔌 插件安装源 | 四通道：本地归档 / npm / GitHub 镜像 / 索引 | [`docs/04-install-source.md`](docs/04-install-source.md) |
 
 ## 仓库结构
 
@@ -32,7 +32,7 @@ dsh-plugins/
 │   ├── 01-architecture.md    # DSH 插件机制原理
 │   ├── 02-plugin-dev-guide.md# 插件开发指南
 │   ├── 03-release-flow.md    # 发布流程
-│   ├── 04-install-source.md  # 安装源三通道说明
+│   ├── 04-install-source.md  # 安装源四通道说明
 │   └── 05-catalog-schema.md  # registry.json 格式定义
 └── skills/              # 配套 AI 技能（复制到 ~/.agents/skills/ 生效）
     ├── dsh-plugin-dev/       # 插件开发
@@ -89,11 +89,13 @@ dsh plugin --profile web add github:<owner>/dsh-plugins#path:packages/dsh-my-too
 
 ## 配套 skill（AI 开发助手）
 
-`skills/` 下三个技能用于指导 AI 在此仓库工作，复制到 `~/.agents/skills/` 后
-会话中自动可用：
+`skills/` 下三个技能用于指导 AI 在此仓库工作。**技能不会自动生效**，需安装到你的 agent 环境：
 
 ```sh
+# 方式一：复制到用户级技能目录（Claude Code / 兼容 agent 的 ~/.agents/skills）
 cp -r skills/dsh-plugin-dev skills/dsh-plugin-release skills/dsh-catalog ~/.agents/skills/
+
+# 方式二：用 skill-installer / find-skill 等技能管理工具按仓库路径安装
 ```
 
 | Skill | 用途 |
@@ -102,13 +104,17 @@ cp -r skills/dsh-plugin-dev skills/dsh-plugin-release skills/dsh-catalog ~/.agen
 | `dsh-plugin-release` | 版本管理、npm/GitHub 发布、安装源同步 |
 | `dsh-catalog` | 维护安装源目录、收录第三方插件 |
 
+> 说明：skills 为操作要点 + 检查清单（指针式），权威口径以 `docs/` 为准。
+
 ## 文档索引
 
 - [DSH 插件机制原理](docs/01-architecture.md) —— profile、bundle patch、双面插件模型
 - [插件开发指南](docs/02-plugin-dev-guide.md) —— 从脚手架到发布前检查清单
-- [发布流程](docs/03-release-flow.md) —— npm / GitHub / registry 三通道
+- [发布流程](docs/03-release-flow.md) —— 本地归档 / npm / GitHub / 索引 四通道
 - [安装源说明](docs/04-install-source.md) —— 如何把本仓库变成安装源
 - [registry 格式定义](docs/05-catalog-schema.md) —— 目录条目字段与兼容性
+- [端到端示例](docs/06-quickstart.md) —— dsh-hello 从建插件到三通道安装
+- [故障排查](docs/08-troubleshooting.md) —— 常见失败现象与处置
 
 ## 关联仓库
 

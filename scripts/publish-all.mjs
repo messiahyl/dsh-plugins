@@ -15,7 +15,7 @@ import { execSync } from 'node:child_process'
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { isValidPackageName } from './lib/names.mjs'
+import { isValidPackageName, pkgDirOf } from './lib/names.mjs'
 import { scanPackage } from './lib/scan-secrets.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -44,10 +44,10 @@ for (const t of targets) {
     continue
   }
   console.log(`\n→ 构建 ${t}`)
-  execSync('pnpm run typecheck && pnpm run build', { cwd: join(ROOT, 'packages', t), stdio: 'inherit' })
+  execSync('pnpm run typecheck && pnpm run build', { cwd: join(ROOT, 'packages', pkgDirOf(t)), stdio: 'inherit' })
 
   // 构建后对最终发布产物（files 白名单含 lib/）扫描
-  const hits = scanPackage(join(ROOT, 'packages', t), pkg)
+  const hits = scanPackage(join(ROOT, 'packages', pkgDirOf(t)), pkg)
   if (hits.length > 0) {
     console.error(`✗ ${t}: 发布产物检测到疑似密钥，中止全部发布：`)
     for (const h of hits) console.error(`    ${h.file} — 疑似${h.label}`)
@@ -56,11 +56,21 @@ for (const t of targets) {
   console.log(`✓ ${t} 密钥扫描通过`)
 }
 
-// 2. npm 发布（可选）
+// 2. npm 发布（可选）：跳过已在 npm 存在的同名同版本（本脚本不递增版本）
 if (!noNpm && !dryRun) {
   for (const t of targets) {
-    console.log(`\n→ npm publish ${t}`)
-    execSync('pnpm publish --access public', { cwd: join(ROOT, 'packages', t), stdio: 'inherit' })
+    const pkg = JSON.parse(readFileSync(join(ROOT, 'packages', pkgDirOf(t), 'package.json'), 'utf8'))
+    const spec = `${pkg.name}@${pkg.version}`
+    let published = false
+    try {
+      published = execSync(`pnpm view ${JSON.stringify(spec)} version`, { stdio: 'pipe' }).toString().trim().length > 0
+    } catch { /* 未发布 */ }
+    if (published) {
+      console.log(`↷ ${spec} 已存在于 npm，跳过发布（升版本请用 node scripts/publish.mjs ${pkg.name} patch）`)
+      continue
+    }
+    console.log(`\n→ npm publish ${spec}`)
+    execSync('pnpm publish --access public', { cwd: join(ROOT, 'packages', pkgDirOf(t)), stdio: 'inherit' })
   }
 }
 

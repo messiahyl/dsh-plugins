@@ -1,8 +1,12 @@
 # 07 · dsh-plugins 方案设计
 
+> **状态横幅：本文为历史方案设计（基于 commit `5a37057` 撰写），已由后续实现与六维度评审定案，
+> 仅作背景参考，不再视为现行规范。** 现行口径以 `docs/01`~`docs/06`、`registry/README.md`、
+> `AGENTS.md` 与脚本实际行为为准；文中【待确认】项多数已定案（checksum 默认拒绝 +
+> `--no-verify` 逃生口、verified 第三方恒 false、通道 local→npm→github、gitee 无安装消费方等）。
+
 > 本文是 dsh-plugins 仓库的整体方案设计：定位与目标、DSH 插件机制认知、仓库架构、
 > 安装源设计、开发与发布流程、工具链约定、配套 skill 体系与演进路线。
-> 状态：基于仓库现状（commit `5a37057`，2026-08-21）撰写，事实以仓库内文件为准；不确定处标注【待确认】。
 > 前置阅读：`docs/01-architecture.md`（机制原理）、`docs/04-install-source.md`（安装源）、`docs/05-catalog-schema.md`（索引格式）。
 
 ---

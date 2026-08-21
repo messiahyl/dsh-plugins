@@ -18,7 +18,7 @@ import { execSync } from 'node:child_process'
 import { readFileSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { isValidPackageName } from './lib/names.mjs'
+import { isValidPackageName, pkgDirOf } from './lib/names.mjs'
 import { scanPackage } from './lib/scan-secrets.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -39,9 +39,9 @@ if (!isValidPackageName(name)) {
   process.exit(1)
 }
 
-const pkgPath = join(ROOT, 'packages', name, 'package.json')
+const pkgPath = join(ROOT, 'packages', pkgDirOf(name), 'package.json')
 if (!existsSync(pkgPath)) {
-  console.error(`未找到插件包: packages/${name}`)
+  console.error(`未找到插件包: packages/${pkgDirOf(name)}（由 ${name} 解析）`)
   process.exit(1)
 }
 
@@ -66,16 +66,16 @@ const next = bump === 'major' ? `${major + 1}.0.0`
 console.log(`→ ${pkg.name}: ${pkg.version} -> ${next}（${bump}${dryRun ? '，dry-run 不落盘' : ''}）`)
 
 if (!dryRun) {
-  execSync(`pnpm version ${bump} --no-git-tag-version`, { cwd: join(ROOT, 'packages', name), stdio: 'inherit' })
+  execSync(`pnpm version ${bump} --no-git-tag-version`, { cwd: join(ROOT, 'packages', pkgDirOf(name)), stdio: 'inherit' })
 }
 
 // 2. 构建 + 类型检查（扫描对象 = 构建后的最终发布产物，先构建）
-execSync('pnpm run build && pnpm run typecheck', { cwd: join(ROOT, 'packages', name), stdio: 'inherit' })
+execSync('pnpm run build && pnpm run typecheck', { cwd: join(ROOT, 'packages', pkgDirOf(name)), stdio: 'inherit' })
 console.log('✓ 构建完成')
 
 // 2.5 密钥扫描：对 npm 实际发布内容（files 白名单含 lib/，不限扩展名）执行
 const pkgAfter = JSON.parse(readFileSync(pkgPath, 'utf8')) // version bump 后重读
-const secretHits = scanPackage(join(ROOT, 'packages', name), pkgAfter)
+const secretHits = scanPackage(join(ROOT, 'packages', pkgDirOf(name)), pkgAfter)
 if (secretHits.length > 0) {
   console.error('✗ 发布产物中检测到疑似密钥，中止发布（确认误报请删除相关行后重试）：')
   for (const h of secretHits) console.error(`    ${h.file} — 疑似${h.label}`)
@@ -85,7 +85,7 @@ console.log(`✓ 密钥扫描通过（${secretHits.length} 处命中）`)
 
 // 3. npm 发布
 if (!noNpm && !dryRun) {
-  execSync('pnpm publish --access public', { cwd: join(ROOT, 'packages', name), stdio: 'inherit' })
+  execSync('pnpm publish --access public', { cwd: join(ROOT, 'packages', pkgDirOf(name)), stdio: 'inherit' })
   console.log('✓ npm 发布完成')
 }
 

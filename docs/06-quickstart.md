@@ -35,7 +35,7 @@ node scripts/install-to-profile.mjs dsh-hello   # link 装进 web profile
 dsh web                                          # 重启，在会话里调用 hello 工具验证
 ```
 
-## 4. 发布（三通道齐发）
+## 4. 发布（四通道齐发）
 
 ```sh
 node scripts/publish.mjs dsh-hello patch

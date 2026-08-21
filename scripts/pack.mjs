@@ -7,15 +7,17 @@
  *
  * 用法：
  *   node scripts/pack.mjs                # 打包 packages/ 下全部插件
- *   node scripts/pack.mjs dsh-ssh        # 只打包指定插件
+ *   node scripts/pack.mjs dsh-ssh        # 只打包指定插件（支持 @scope/dsh-x）
  *
  * 产物：registry/packages/<name>-<version>.tgz
  * 打包后必须重新生成索引：node scripts/build-registry.mjs
+ * 退出码：任一包失败时非 0（发布链据此判定，避免伪成功）
  */
 import { execSync } from 'node:child_process'
 import { readdirSync, existsSync, mkdirSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { pkgDirOf, isValidPackageName } from './lib/names.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -30,14 +32,22 @@ if (targets.length === 0) {
   )
 }
 if (targets.length === 0) {
-  console.error('没有可打包的插件（packages/ 为空或未提供插件名）')
-  process.exit(1)
+  // 无真实插件时幂等成功（CI 空跑不报错），语义由 build-registry 的 localCount 反映
+  console.warn('没有可打包的插件（packages/ 为空或未提供插件名）——跳过打包')
+  process.exit(0)
 }
 
+let failed = 0
 for (const t of targets) {
-  const dir = join(ROOT, 'packages', t)
+  if (!isValidPackageName(t)) {
+    console.warn(`跳过 ${t}: 非法插件名（应形如 dsh-xxx 或 @scope/dsh-xxx）`)
+    failed++
+    continue
+  }
+  const dir = join(ROOT, 'packages', pkgDirOf(t))
   if (!existsSync(join(dir, 'package.json'))) {
-    console.warn(`跳过 ${t}: 未找到 package.json`)
+    console.warn(`跳过 ${t}: 未找到 ${join(dir, 'package.json')}`)
+    failed++
     continue
   }
   console.log(`→ 打包 ${t}`)
@@ -52,7 +62,12 @@ for (const t of targets) {
     console.log(tgz ? `✓ ${tgz} -> registry/packages/` : `✓ 已打包到 registry/packages/（${OUT}）`)
   } catch (e) {
     console.error(`✗ ${t} 打包失败: ${e.message}`)
+    failed++
   }
 }
 
+if (failed > 0) {
+  console.error(`\n✗ ${failed} 个插件打包失败，退出码非 0（请勿继续发布）`)
+  process.exit(1)
+}
 console.log('\n完成。请执行 node scripts/build-registry.mjs 更新索引（登记 install.local 通道）。')

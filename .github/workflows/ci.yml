@@ -29,10 +29,10 @@ jobs:
       - name: 构建（全部包）
         run: pnpm -r build
 
-      - name: 重新打包归档 + 生成索引（验证与提交内容一致）
+      - name: 重新打包归档 + 生成索引（--stable 确定性输出，验证与提交内容一致）
         run: |
           node scripts/pack.mjs
-          node scripts/build-registry.mjs
+          node scripts/build-registry.mjs --stable
 
       - name: 一致性校验（registry/ 生成后不得有差异：索引 + 归档）
         run: git diff --exit-code registry/ || (echo '::error::registry/ 过期或归档缺失，请运行 node scripts/pack.mjs && node scripts/build-registry.mjs 后提交' && exit 1)

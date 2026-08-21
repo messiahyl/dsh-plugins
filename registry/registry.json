@@ -1,6 +1,7 @@
 {
   "meta": {
-    "generatedAt": "2026-08-21T15:49:17.734Z",
+    "schemaVersion": 1,
+    "generatedAt": "stable",
     "source": "https://gitee.com/messiahyl/dsh-plugins",
     "count": 2,
     "localCount": 0,
@@ -21,6 +22,10 @@
       "fork": false,
       "source": "third-party",
       "verified": false,
+      "install": {
+        "npm": "dsh-browser"
+      },
+      "archive": null,
       "tags": [
         "tool"
       ],
@@ -40,6 +45,10 @@
       "fork": false,
       "source": "third-party",
       "verified": false,
+      "install": {
+        "github": "loguhan/dsh-workshop"
+      },
+      "archive": null,
       "tags": [
         "ui",
         "workflow"

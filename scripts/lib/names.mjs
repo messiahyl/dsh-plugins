@@ -17,6 +17,11 @@ export function cordisIdOf(name) {
   return name.startsWith('@') ? name.split('/')[1].replace(/^dsh-/, '') : name.replace(/^dsh-/, '')
 }
 
+/** 包名 → packages/ 目录名（唯一映射）：@scope/dsh-x → dsh-x，dsh-x → dsh-x */
+export function pkgDirOf(name) {
+  return name.startsWith('@') ? name.split('/')[1] : name
+}
+
 /** pnpm pack 的归档文件名转义：@scope/dsh-x → scope-dsh-x-<ver>.tgz */
 export function archiveFileName(name, version) {
   const esc = name.startsWith('@') ? name.slice(1).replace('/', '-') : name
