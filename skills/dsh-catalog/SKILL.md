@@ -13,11 +13,12 @@ description: 维护 DSH 插件安装源目录（registry）。当用户要求管
 | 来源 | 位置 | source 值 | 维护方式 |
 |------|------|-----------|----------|
 | 本仓库插件 | `packages/*/package.json` | `local` | 自动扫描 |
+| 安装包归档 | `registry/packages/*.tgz`（`node scripts/pack.mjs` 生成） | — | 打包后自动登记 `install.local` / `archive` |
 | 第三方收录 | `registry/third-party/*.json` | `third-party` | 人工写元数据 |
 
 ## 工作流
 
-1. **本地插件变更**：改 `packages/` 后执行 `node scripts/build-registry.mjs` 重新生成。
+1. **本地插件变更**：改 `packages/` 后执行 `node scripts/pack.mjs`（可选，用于归档）与 `node scripts/build-registry.mjs` 重新生成。
 2. **收录第三方**：在 `registry/third-party/<name>.json` 写元数据（name 必填；url/description/tags/license 建议齐全；`verified: false` 默认），再生成。
 3. **发布目录**：
    ```sh

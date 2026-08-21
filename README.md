@@ -15,14 +15,16 @@ dsh-plugins/
 ├── packages/            # 插件源码（monorepo）
 │   ├── _template/       # 插件脚手架模板（scripts/create-plugin.mjs 使用）
 │   └── dsh-xxx/         # 实际插件（新建见下）
-├── registry/            # 插件安装源
+├── registry/            # 插件安装源（索引 + 安装包归档）
 │   ├── registry.json    # 安装源注册表（脚本生成，勿手改）
+│   ├── packages/        # 安装包归档 .tgz（pnpm pack 产物，国内网络友好）
 │   └── third-party/     # 第三方插件收录（人工维护）
 ├── scripts/             # 仓库级工具
 │   ├── create-plugin.mjs      # 新建插件脚手架
 │   ├── build-registry.mjs     # 生成安装源目录
+│   ├── pack.mjs               # 打包安装包归档（registry/packages/）
 │   ├── install-to-profile.mjs # 安装到本地 DSH profile（link 调试）
-│   ├── publish.mjs            # 发布（npm + registry）
+│   ├── publish.mjs            # 发布（npm + 归档 + registry）
 │   └── sync-github.sh         # Gitee → GitHub 镜像（安装源通道）
 ├── docs/                # 文档
 │   ├── 01-architecture.md    # DSH 插件机制原理
@@ -48,8 +50,11 @@ cd packages/dsh-my-tool && pnpm install && pnpm run build && pnpm run typecheck
 # 本地调试：link 安装到 web profile，重启 dsh web 生效
 node scripts/install-to-profile.mjs dsh-my-tool
 
-# 发布（npm + 刷新安装源目录）
+# 发布（npm + 打包归档 + 刷新安装源目录）
 node scripts/publish.mjs dsh-my-tool patch
+
+# 仅打包安装包归档（不发布 npm）
+node scripts/pack.mjs dsh-my-tool
 
 # 同步 GitHub 安装源通道
 bash scripts/sync-github.sh
@@ -58,13 +63,16 @@ bash scripts/sync-github.sh
 ## 安装本仓库的插件
 
 ```sh
+# 本地归档通道（推荐：国内网络，下载 registry/packages/ 的 tgz 后安装）
+dsh plugin --profile web add file:./registry/packages/dsh-my-tool-0.1.0.tgz
+
 # npm 通道（已发布）
 dsh plugin --profile web add dsh-my-tool
 
 # GitHub 通道（已同步镜像）
 dsh plugin --profile web add github:<owner>/dsh-plugins#path:packages/dsh-my-tool
 
-# 安装源目录（供 workshop 风格工具读取）
+# 安装源目录（索引，含 install.local 通道优先级）
 # https://gitee.com/messiahyl/dsh-plugins/raw/master/registry/registry.json
 ```
 

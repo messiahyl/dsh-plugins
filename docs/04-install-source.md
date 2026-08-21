@@ -1,6 +1,6 @@
 # 04 · 安装源说明
 
-本仓库作为 **DSH 插件安装源** 的三通道设计。
+本仓库作为 **DSH 插件安装源** 的通道设计，含解决国内网络问题的本地归档通道。
 
 ## 背景：DSH 安装的本质
 
@@ -10,27 +10,48 @@ DSH 的 `dsh plugin --profile <name> add <spec>` 本质是 pnpm 安装 + bundle 
 |-----------|------|----------|
 | `dsh-xxx` | npm 包 | 公共分发 |
 | `github:owner/repo` | GitHub 仓库（含 `#path:` 子目录） | 社区安装、workshop |
+| `file:path.tgz` | 本地/下载的安装包归档 | 离线、国内网络 |
 | `link:/abs/path` | 本地目录 | 开发调试 |
 | `git+https://...` | 任意 git 仓库 | 私有分发 |
 
-**关键约束**：workshop 与 `github:` 安装只认 GitHub；Gitee 只能作为代码主源 + registry 静态源。
+**关键约束**：workshop 与 `github:` 安装只认 GitHub；Gitee 只能作为代码主源 + 归档静态源。
 
-## 通道 A：registry.json（目录源）
+## 通道 A：本地安装包归档（推荐，解决网络问题）
+
+`node scripts/pack.mjs` 把插件 `pnpm pack` 成 `.tgz` 放入 `registry/packages/`，
+随仓库提交到 Gitee（国内下载快、不依赖 npm/GitHub 可达性）：
+
+```sh
+# 方式一：索引给 raw URL，curl 下载后本地安装
+curl -LO https://gitee.com/messiahyl/dsh-plugins/raw/master/registry/packages/dsh-xxx-0.1.0.tgz
+dsh plugin --profile web add file:./dsh-xxx-0.1.0.tgz
+
+# 方式二：仓库已 clone 在本地，直接装归档
+dsh plugin --profile web add file:./registry/packages/dsh-xxx-0.1.0.tgz
+```
+
+索引 `registry.json` 的每个本地插件带 `install.local`（归档 raw URL）与
+`archive`（文件名/版本）字段，安装器可自动选择本通道。
+
+> 注意：归档内的**运行时依赖**首次安装仍需解析（可配置 npmmirror 镜像），
+> 平台供给的 react / @deepseek-ai 运行时为 peerDependencies，不额外下载。
+
+## 通道 B：registry.json（目录源）
 
 `registry/registry.json` 由 `node scripts/build-registry.mjs` 生成，兼容 dsh-recommend 字段超集。可被两类消费者使用：
 
-1. **workshop 风格安装器**：读取 registry → 展示卡片 → `dsh plugin add` 执行安装。
+1. **workshop 风格安装器**：读取 registry → 展示卡片 → 按 `install` 通道（local → npm → github）执行安装。
 2. **自研/脚本**：解析 `install` 字段选择通道。
 
 托管方式：Gitee raw（`https://gitee.com/messiahyl/dsh-plugins/raw/master/registry/registry.json`）
 或 Gitee Pages。消费端每次拉取最新目录。
 
-## 通道 B：npm
+## 通道 C：npm
 
 每个 packages/ 插件独立发布 npm（`node scripts/publish.mjs <pkg> patch`）。
 npm 优先被 workshop 使用（npm 快、免构建）；发布到公共 registry 即人人可装。
 
-## 通道 C：GitHub 镜像
+## 通道 D：GitHub 镜像
 
 `bash scripts/sync-github.sh` 把仓库镜像到 `github.com/<owner>/dsh-plugins`。
 镜像后每个插件可直接安装：
@@ -44,9 +65,9 @@ dsh plugin --profile web add github:<owner>/dsh-plugins#path:packages/dsh-ssh
 
 ## 使用建议
 
-- **自己多台机器**：优先 npm 或 GitHub 镜像（Gitee 直连国内更快时用 `git+https://gitee.com/...`）。
-- **给他人用**：npm 发布 + 更新 registry + GitHub 镜像，三通道齐发。
-- **内网/私有**：`link:` 或私有 git 源，registry.json 走内网静态服务。
+- **国内/多台机器**：优先**本地归档**通道（Gitee raw 直连），其次 npm 配 npmmirror。
+- **给他人用**：npm 发布 + 更新 registry + 打包归档 + GitHub 镜像，四通道齐发。
+- **内网/私有**：`link:` 或私有 git 源，归档可放内网静态服务。
 
 ## 安全边界
 

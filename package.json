@@ -14,6 +14,7 @@
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "registry": "node scripts/build-registry.mjs",
+    "pack": "node scripts/pack.mjs",
     "install:profile": "node scripts/install-to-profile.mjs",
     "publish": "node scripts/publish.mjs",
     "sync:github": "bash scripts/sync-github.sh"

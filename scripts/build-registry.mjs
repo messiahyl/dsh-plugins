@@ -4,7 +4,8 @@
  *
  * 数据来源：
  *   1. packages 下各包的 package.json（本仓库直接维护的插件）
- *   2. registry/third-party/ 下的 .json（第三方插件收录，人工维护的元数据）
+ *   2. registry/packages/ 下的 .tgz 归档（安装包，登记 install.local 通道）
+ *   3. registry/third-party/ 下的 .json（第三方插件收录，人工维护的元数据）
  *
  * 输出格式兼容 dsh-recommend（name/owner/fullName/url/description/stars/...）
  * 并扩展自有字段（version/source/install/verified/tags），供 workshop 风格安装器或自研安装源读取。
@@ -21,12 +22,21 @@ const GITEE_REPO = 'https://gitee.com/messiahyl/dsh-plugins'
 
 const plugins = []
 
+// ── 0. 安装包归档目录（registry/packages/*.tgz，pnpm pack 产物）──
+// 文件名形如 dsh-x-0.1.0.tgz / scope-dsh-x-0.1.0.tgz（@scope/ 被 pnpm 转义为 scope-）
+const packDir = join(ROOT, 'registry', 'packages')
+const archives = existsSync(packDir) ? readdirSync(packDir).filter((f) => f.endsWith('.tgz')) : []
+const esc = (n) => n.startsWith('@') ? n.slice(1).replace('/', '-') : n
+const archiveOf = (name, version) => `${esc(name)}-${version}.tgz`
+
 // ── 1. 本仓库 packages/ ──
 for (const dir of readdirSync(join(ROOT, 'packages'))) {
   if (dir === '_template') continue
   const pkgPath = join(ROOT, 'packages', dir, 'package.json')
   if (!existsSync(pkgPath)) continue
   const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'))
+  const tgz = archiveOf(pkg.name, pkg.version)
+  const hasArchive = archives.includes(tgz)
   plugins.push({
     name: pkg.name,
     owner: 'messiahyl',
@@ -36,10 +46,14 @@ for (const dir of readdirSync(join(ROOT, 'packages'))) {
     version: pkg.version,
     source: 'local',
     install: {
+      local: hasArchive
+        ? `${GITEE_REPO}/raw/master/registry/packages/${tgz}`
+        : '',
       npm: pkg.name,
       gitee: `${GITEE_REPO}#path:packages/${dir}`,
-      github: pkg.repository?.url?.replace(/^https?:\/\//, '').replace(/\.git$/, '') ?? '',
+      github: `github.com/messiahyl/dsh-plugins#path:packages/${dir}`,
     },
+    archive: hasArchive ? { file: tgz, version: pkg.version } : null,
     verified: true,
     tags: [],
     license: pkg.license ?? 'Apache-2.0',
@@ -93,11 +107,12 @@ const registry = {
     count: unique.length,
     localCount: unique.filter((p) => p.source === 'local').length,
     thirdPartyCount: unique.filter((p) => p.source === 'third-party').length,
+    archivedCount: unique.filter((p) => p.archive).length,
   },
   plugins: unique,
 }
 
 const out = join(ROOT, 'registry', 'registry.json')
 writeFileSync(out, JSON.stringify(registry, null, 2) + '\n')
-console.log(`✓ registry.json 已生成: ${unique.length} 个插件（本地 ${registry.meta.localCount} / 第三方 ${registry.meta.thirdPartyCount}）`)
+console.log(`✓ registry.json 已生成: ${unique.length} 个插件（本地 ${registry.meta.localCount} / 第三方 ${registry.meta.thirdPartyCount} / 含安装包 ${registry.meta.archivedCount}）`)
 console.log(`  路径: ${out}`)

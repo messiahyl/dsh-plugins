@@ -6,11 +6,13 @@
 
 | 通道 | 命令 | 谁在用 |
 |------|------|--------|
+| 本地归档 | `node scripts/pack.mjs <pkg>`（publish.mjs 自动执行） | 国内/离线，`file:` 安装 |
 | npm | `node scripts/publish.mjs <pkg> patch` | `dsh plugin add <pkg>` |
 | GitHub 镜像 | `bash scripts/sync-github.sh` | `github:owner/repo`、workshop 一键安装 |
-| registry.json | `node scripts/build-registry.mjs` | 自建安装源/目录工具 |
+| registry.json | `node scripts/build-registry.mjs`（publish.mjs 自动执行） | 自建安装源/目录工具 |
 
-建议顺序：**npm 发布 → git 提交打 tag → 同步 GitHub → 更新 registry**（registry 生成会在 publish.mjs 内自动完成）。
+建议顺序：**npm 发布 → 打包归档 → git 提交打 tag → 同步 GitHub → 更新 registry**
+（归档与 registry 更新在 publish.mjs 内自动完成）。
 
 ## 1. 版本管理
 
@@ -28,7 +30,8 @@ node scripts/publish.mjs dsh-my-tool patch
 2. `pnpm version patch --no-git-tag-version` 升版本
 3. `pnpm run build && pnpm run typecheck`
 4. `pnpm publish --access public`（`--no-npm` 跳过）
-5. 重新生成 `registry/registry.json`
+5. 打包归档到 `registry/packages/`（`node scripts/pack.mjs`）
+6. 重新生成 `registry/registry.json`
 
 ## 3. git 通道（tag + 推送）
 
@@ -52,6 +55,7 @@ bash scripts/sync-github.sh
 ## 5. 回滚
 
 - **npm**：npm 不支持删除已发布版本，发修复版（patch+1）替代。
+- **归档**：删除 `registry/packages/<name>-<旧版本>.tgz` 并重新生成索引，提交即回滚（旧版本不再出现在 local 通道）。
 - **git**：`git revert <commit>` 或 `git tag -d <tag> && git push origin :refs/tags/<tag>`（谨慎，会破坏已装用户）。
 - **registry**：重新生成后提交即可，`meta.generatedAt` 记录时间。
 

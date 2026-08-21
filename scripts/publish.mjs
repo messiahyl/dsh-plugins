@@ -74,7 +74,11 @@ if (!noNpm && !dryRun) {
   console.log('✓ npm 发布完成')
 }
 
-// 4. 更新 registry
+// 4. 打包归档到 registry/packages/（安装源的本地通道，解决网络问题）
+execSync('node scripts/pack.mjs ' + name, { cwd: ROOT, stdio: 'inherit' })
+console.log('✓ 安装包归档完成')
+
+// 5. 更新 registry
 execSync('node scripts/build-registry.mjs', { cwd: ROOT, stdio: 'inherit' })
 
 console.log(`
