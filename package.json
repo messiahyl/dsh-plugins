@@ -20,7 +20,8 @@
     "sync:github": "bash scripts/sync-github.sh"
   },
   "devDependencies": {
-    "tsdown": "^0.8.0",
-    "typescript": "^5.5.0"
+    "@types/node": "^22.20.0",
+    "tsdown": "0.22.2",
+    "typescript": "~5.7.2"
   }
 }

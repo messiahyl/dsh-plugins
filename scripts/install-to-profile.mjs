@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * install-to-profile.mjs — 把本仓库插件以 link 模式安装到本地 DSH profile
+ * install-to-profile.mjs — 把本仓库插件以 link 模式安装/卸载到本地 DSH profile
  *
  * 用法：
  *   node scripts/install-to-profile.mjs            # 安装 packages/ 下全部插件
  *   node scripts/install-to-profile.mjs dsh-ssh    # 只装指定插件
+ *   node scripts/install-to-profile.mjs dsh-ssh --remove   # 卸载
  *   node scripts/install-to-profile.mjs dsh-ssh --profile web
  *
  * link 模式 = 本地开发实时生效（改代码 → 重启 dsh web 即加载），
@@ -21,8 +22,9 @@ const ROOT = join(__dirname, '..')
 const args = process.argv.slice(2)
 const profileIdx = args.indexOf('--profile')
 const profile = profileIdx >= 0 ? args[profileIdx + 1] : 'web'
+const remove = args.includes('--remove')
 
-// 解析：--profile <name> 之外的非选项参数视为插件名
+// 解析：--profile <name> / --remove 之外的非选项参数视为插件名
 const named = []
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--profile') { i++; continue }
@@ -43,6 +45,16 @@ for (const t of targets) {
   const abs = resolve(ROOT, 'packages', t)
   if (!existsSync(join(abs, 'package.json'))) {
     console.warn(`跳过 ${t}: 未找到 ${join(abs, 'package.json')}`)
+    continue
+  }
+  if (remove) {
+    console.log(`→ 卸载 ${t}（profile ${profile}）`)
+    try {
+      execSync(`dsh plugin --profile ${profile} remove ${t}`, { stdio: 'inherit' })
+      console.log(`✓ ${t} 已卸载`)
+    } catch (e) {
+      console.error(`✗ ${t} 卸载失败: ${e.message}`)
+    }
     continue
   }
   console.log(`→ 安装 ${t} -> profile ${profile}（link:${abs}）`)

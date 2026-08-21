@@ -8,8 +8,10 @@
  *
  * 插件是 cordis 插件：默认导出 (ctx, config) => void 的 apply 函数。
  * 移除/卸载时 cordis 会调用 dispose 钩子做清理（连接池、定时器、路由卸载）。
+ *
+ * 类型提示：生产环境可从 @deepseek-ai/dsh-base 导入 ctx 类型；
+ * 开发环境该包不存在于 workspace，故用 any 并保持最小依赖。
  */
-import type {} from '@deepseek-ai/dsh-base'
 
 export const name = 'dsh-xxx'
 export const inject = {

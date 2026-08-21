@@ -1,0 +1,10 @@
+{
+  "name": "dsh-workshop",
+  "owner": "loguhan",
+  "fullName": "loguhan/dsh-workshop",
+  "url": "https://github.com/loguhan/dsh-workshop",
+  "description": "Steam Workshop 风格的 DSH 插件商店：浏览、搜索、一键安装社区插件，镜像加速与安全校验",
+  "tags": ["ui", "workflow"],
+  "license": "MIT",
+  "language": "TypeScript"
+}

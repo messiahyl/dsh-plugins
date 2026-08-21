@@ -19,19 +19,23 @@ DSH 的 `dsh plugin --profile <name> add <spec>` 本质是 pnpm 安装 + bundle 
 ## 通道 A：本地安装包归档（推荐，解决网络问题）
 
 `node scripts/pack.mjs` 把插件 `pnpm pack` 成 `.tgz` 放入 `registry/packages/`，
-随仓库提交到 Gitee（国内下载快、不依赖 npm/GitHub 可达性）：
+随仓库提交到 Gitee（国内下载快、不依赖 npm/GitHub 可达性）。
+归档带 **sha256 校验和**（索引 `archive.checksum`），下载后校验防篡改/损坏。
+
+推荐用本仓库安装器（自动选通道 + 校验）：
 
 ```sh
-# 方式一：索引给 raw URL，curl 下载后本地安装
-curl -LO https://gitee.com/messiahyl/dsh-plugins/raw/master/registry/packages/dsh-xxx-0.1.0.tgz
-dsh plugin --profile web add file:./dsh-xxx-0.1.0.tgz
-
-# 方式二：仓库已 clone 在本地，直接装归档
-dsh plugin --profile web add file:./registry/packages/dsh-xxx-0.1.0.tgz
+node scripts/install-from-registry.mjs dsh-xxx          # auto: local → npm → github
+node scripts/install-from-registry.mjs dsh-xxx --source local   # 强制 local
+node scripts/install-from-registry.mjs dsh-xxx --remote         # 远端索引（另一台机器）
 ```
 
-索引 `registry.json` 的每个本地插件带 `install.local`（归档 raw URL）与
-`archive`（文件名/版本）字段，安装器可自动选择本通道。
+或手动：
+
+```sh
+curl -LO https://gitee.com/messiahyl/dsh-plugins/raw/master/registry/packages/dsh-xxx-0.1.0.tgz
+dsh plugin --profile web add file:./dsh-xxx-0.1.0.tgz
+```
 
 > 注意：归档内的**运行时依赖**首次安装仍需解析（可配置 npmmirror 镜像），
 > 平台供给的 react / @deepseek-ai 运行时为 peerDependencies，不额外下载。

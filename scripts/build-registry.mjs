@@ -13,6 +13,7 @@
  * 用法：node scripts/build-registry.mjs
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -28,6 +29,7 @@ const packDir = join(ROOT, 'registry', 'packages')
 const archives = existsSync(packDir) ? readdirSync(packDir).filter((f) => f.endsWith('.tgz')) : []
 const esc = (n) => n.startsWith('@') ? n.slice(1).replace('/', '-') : n
 const archiveOf = (name, version) => `${esc(name)}-${version}.tgz`
+const sha256 = (buf) => createHash('sha256').update(buf).digest('hex')
 
 // ── 1. 本仓库 packages/ ──
 for (const dir of readdirSync(join(ROOT, 'packages'))) {
@@ -37,6 +39,9 @@ for (const dir of readdirSync(join(ROOT, 'packages'))) {
   const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'))
   const tgz = archiveOf(pkg.name, pkg.version)
   const hasArchive = archives.includes(tgz)
+  const checksum = hasArchive
+    ? sha256(readFileSync(join(packDir, tgz)))
+    : null
   plugins.push({
     name: pkg.name,
     owner: 'messiahyl',
@@ -53,7 +58,7 @@ for (const dir of readdirSync(join(ROOT, 'packages'))) {
       gitee: `${GITEE_REPO}#path:packages/${dir}`,
       github: `github.com/messiahyl/dsh-plugins#path:packages/${dir}`,
     },
-    archive: hasArchive ? { file: tgz, version: pkg.version } : null,
+    archive: hasArchive ? { file: tgz, version: pkg.version, checksum } : null,
     verified: true,
     tags: [],
     license: pkg.license ?? 'Apache-2.0',

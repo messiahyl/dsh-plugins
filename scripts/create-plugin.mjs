@@ -7,8 +7,8 @@
  *
  * 行为：复制 packages/_template 到 packages/<name>，替换包名、cordis id、client banner id。
  */
-import { cpSync, readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
-import { join, dirname } from 'node:path'
+import { cpSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs'
+import { join, dirname, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -44,8 +44,11 @@ if (existsSync(dest)) {
   process.exit(1)
 }
 
-// 复制模板
-cpSync(join(ROOT, 'packages', '_template'), dest, { recursive: true })
+// 复制模板（排除 lib/：脚手架不应携带 dsh-xxx 名字的旧构建产物，新插件自行构建）
+cpSync(join(ROOT, 'packages', '_template'), dest, {
+  recursive: true,
+  filter: (src) => !src.endsWith(`${sep}lib`),
+})
 console.log(`✓ 已复制模板 -> ${dest}`)
 
 // 替换占位符：必须先替换长串 'dsh-xxx'，再替换剩下的 'xxx'（避免 dsh-dsh-xxx 污染）
@@ -54,6 +57,8 @@ const targets = [
   ['cordis.patch.yml', [['dsh-xxx', name], ['xxx', cordisId]]],
   ['tsdown.config.ts', [['dsh-xxx', name]]],
   ['src/host/index.ts', [['dsh-xxx', name], ['xxx', cordisId]]],
+  ['src/client/index.tsx', [['dsh-xxx', name]]],
+  ['src/client/sidebar.ts', [['dsh-xxx', name]]],
 ]
 for (const [rel, pairs] of targets) {
   const p = join(dest, rel)

@@ -15,8 +15,17 @@ registry/
 ## 安装包归档（解决网络问题）
 
 `node scripts/pack.mjs` 把各插件 `pnpm pack` 成 `.tgz` 放入 `registry/packages/`，
-随仓库提交到 Gitee（国内可达）。索引的 `install.local` 字段指向归档 raw URL，
-安装器可优先走本地通道绕开 npm/GitHub 的网络问题：
+随仓库提交到 Gitee（国内可达），并附带 **sha256 校验和**（索引 `archive.checksum`）。
+
+推荐用本仓库安装器消费（auto 选通道 + 下载校验 + 安装）：
+
+```sh
+node scripts/install-from-registry.mjs dsh-xxx          # local → npm → github
+node scripts/install-from-registry.mjs --list           # 浏览索引
+node scripts/install-from-registry.mjs dsh-xxx --remote # 远端索引（另一台机器）
+```
+
+或手动：
 
 ```sh
 # 本地归档通道（下载 tgz 后安装）

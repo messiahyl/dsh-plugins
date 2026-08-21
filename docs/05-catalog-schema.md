@@ -29,7 +29,7 @@
 | `version` | string | 本地 | 当前版本 |
 | `source` | `"local"` \| `"third-party"` | ✅ | 来源 |
 | `install` | object | 本地 | 安装通道：`local` / `npm` / `gitee` / `github` |
-| `archive` | object \| null | 本地 | 安装包归档：`{ file: "<name>-<ver>.tgz", version }`，无归档为 null |
+| `archive` | object \| null | 本地 | 安装包归档：`{ file, version, checksum }`，无归档为 null |
 | `verified` | boolean | ✅ | 是否经本仓库审查（本地插件=true，第三方默认 false） |
 | `tags` | string[] | | 分类标签（tool / ui / workflow / notification / dev / fun） |
 | `license` | string | | 许可证 |
@@ -48,12 +48,12 @@
     "gitee":  "https://gitee.com/messiahyl/dsh-plugins#path:packages/dsh-ssh",
     "github": "github.com/messiahyl/dsh-plugins#path:packages/dsh-ssh"
   },
-  "archive": { "file": "dsh-ssh-0.2.6.tgz", "version": "0.2.6" }
+  "archive": { "file": "dsh-ssh-0.2.6.tgz", "version": "0.2.6", "checksum": "sha256hex..." }
 }
 ```
 
-`install.local` 与 `archive` 由 build-registry.mjs 扫描 `registry/packages/` 自动填充。
-安装器建议的通道优先级：**local（免网络）→ npm → github**。
+`install.local`、`archive`（含 `checksum`）由 build-registry.mjs 扫描 `registry/packages/` 自动填充。
+安装器建议的通道优先级：**local（免网络 + 校验和）→ npm → github**。
 
 ## 兼容性说明
 

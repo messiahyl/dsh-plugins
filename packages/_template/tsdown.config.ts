@@ -27,7 +27,7 @@ export default defineConfig([
     outDir: 'lib/host',
     format: ['esm'],
     platform: 'node',
-    external: [/^@deepseek-ai\//, /^node:/],
+    deps: { neverBundle: [/^@deepseek-ai\//, /^node:/] },
     sourcemap: true,
     dts: true,
   },
@@ -36,8 +36,11 @@ export default defineConfig([
     outDir: 'lib',
     format: 'cjs',
     platform: 'browser',
-    external: PLATFORM_MODULES,
-    noExternal: (id) => (PLATFORM_MODULES.includes(id) ? undefined : true),
+    deps: {
+      // 平台清单永不打包（运行时由宿主供给）；其余模块全部打进 bundle
+      neverBundle: PLATFORM_MODULES,
+      alwaysBundle: (id: string) => (PLATFORM_MODULES.includes(id) ? undefined : true),
+    },
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? 'production'),
     },
@@ -45,6 +48,7 @@ export default defineConfig([
     clean: false,
     dts: false,
     outputOptions: {
+      exports: 'named',
       entryFileNames: 'client.js',
       banner: 'window.__ModuleLoader__.load({ id: "dsh-xxx", factory: (require) => {',
       footer: 'return module.exports; } });',

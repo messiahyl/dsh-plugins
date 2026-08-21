@@ -15,7 +15,7 @@
  * 注意：发布 = 对外运行你的代码。发布前确认包内无密钥、无调试残留。
  */
 import { execSync } from 'node:child_process'
-import { readFileSync, writeFileSync, existsSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -56,6 +56,35 @@ const [major, minor, patch] = pkg.version.split('.').map(Number)
 const next = bump === 'major' ? `${major + 1}.0.0`
   : bump === 'minor' ? `${major}.${minor + 1}.0`
   : `${major}.${minor}.${patch + 1}`
+
+// 1.5 密钥扫描：发布前检查 src/ 与包根文本文件里的敏感模式
+const SECRET_PATTERNS = [
+  [/AKIA[0-9A-Z]{16}/, 'AWS Access Key'],
+  [/sk-[A-Za-z0-9]{20,}/, 'sk- API key'],
+  [/-----BEGIN (RSA |EC |OPENSSH |PRIVATE )?KEY-----/, '私钥块'],
+  [/(password|passwd|secret|api[_-]?key|access[_-]?token)\s*[:=]\s*["'][^"']{8,}/i, '明文密钥赋值'],
+]
+function walk(dir, acc = []) {
+  for (const f of readdirSync(dir)) {
+    const p = join(dir, f)
+    if (f === 'node_modules' || f === 'lib' || f === '.git') continue
+    if (statSync(p).isDirectory()) walk(p, acc)
+    else if (/\.(ts|tsx|js|mjs|json|yml|yaml|md|env)$/.test(f)) acc.push(p)
+  }
+  return acc
+}
+const secretHits = []
+for (const file of walk(join(ROOT, 'packages', name))) {
+  const text = readFileSync(file, 'utf8')
+  for (const [re, label] of SECRET_PATTERNS) {
+    if (re.test(text)) secretHits.push(`${file.replace(ROOT + '/', '')} — 疑似${label}`)
+  }
+}
+if (secretHits.length > 0) {
+  console.error('✗ 检测到疑似密钥，中止发布（确认误报可删除相关行后重试）：')
+  for (const h of secretHits) console.error(`    ${h}`)
+  process.exit(1)
+}
 
 console.log(`→ ${pkg.name}: ${pkg.version} -> ${next}（${bump}${dryRun ? '，dry-run 不落盘' : ''}）`)
 

@@ -21,10 +21,12 @@ dsh-plugins/
 │   └── third-party/     # 第三方插件收录（人工维护）
 ├── scripts/             # 仓库级工具
 │   ├── create-plugin.mjs      # 新建插件脚手架
-│   ├── build-registry.mjs     # 生成安装源目录
+│   ├── build-registry.mjs     # 生成安装源目录（含 sha256 校验和）
 │   ├── pack.mjs               # 打包安装包归档（registry/packages/）
-│   ├── install-to-profile.mjs # 安装到本地 DSH profile（link 调试）
-│   ├── publish.mjs            # 发布（npm + 归档 + registry）
+│   ├── install-from-registry.mjs # 安装器：按索引选通道（local→npm→github）+ 校验
+│   ├── install-to-profile.mjs # link 安装/卸载到本地 DSH profile
+│   ├── publish.mjs            # 单包发布（密钥扫描 + npm + 归档 + registry）
+│   ├── publish-all.mjs        # 一键全量发布
 │   └── sync-github.sh         # Gitee → GitHub 镜像（安装源通道）
 ├── docs/                # 文档
 │   ├── 01-architecture.md    # DSH 插件机制原理
@@ -50,11 +52,17 @@ cd packages/dsh-my-tool && pnpm install && pnpm run build && pnpm run typecheck
 # 本地调试：link 安装到 web profile，重启 dsh web 生效
 node scripts/install-to-profile.mjs dsh-my-tool
 
-# 发布（npm + 打包归档 + 刷新安装源目录）
+# 发布（密钥扫描 + npm + 打包归档 + 刷新安装源目录）
 node scripts/publish.mjs dsh-my-tool patch
+
+# 一键全量发布全部插件（跳过 npm 用 --no-npm）
+node scripts/publish-all.mjs
 
 # 仅打包安装包归档（不发布 npm）
 node scripts/pack.mjs dsh-my-tool
+
+# 从安装源安装（auto 选通道：local 归档 → npm → github）
+node scripts/install-from-registry.mjs dsh-my-tool
 
 # 同步 GitHub 安装源通道
 bash scripts/sync-github.sh
@@ -63,16 +71,19 @@ bash scripts/sync-github.sh
 ## 安装本仓库的插件
 
 ```sh
-# 本地归档通道（推荐：国内网络，下载 registry/packages/ 的 tgz 后安装）
+# 方式一：本仓库安装器（读索引 auto 选通道，local 优先 + sha256 校验）
+node scripts/install-from-registry.mjs dsh-my-tool
+
+# 方式二：本地归档（国内网络，下载 registry/packages/ 的 tgz 后安装）
 dsh plugin --profile web add file:./registry/packages/dsh-my-tool-0.1.0.tgz
 
-# npm 通道（已发布）
+# 方式三：npm 通道（已发布）
 dsh plugin --profile web add dsh-my-tool
 
-# GitHub 通道（已同步镜像）
+# 方式四：GitHub 通道（已同步镜像）
 dsh plugin --profile web add github:<owner>/dsh-plugins#path:packages/dsh-my-tool
 
-# 安装源目录（索引，含 install.local 通道优先级）
+# 安装源目录（索引，含 install.local 通道与 checksum）
 # https://gitee.com/messiahyl/dsh-plugins/raw/master/registry/registry.json
 ```
 
