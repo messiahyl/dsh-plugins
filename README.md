@@ -123,12 +123,12 @@ dsh plugin --profile web add github:<owner>/dsh-plugins#path:packages/dsh-xxx
 
 ## 收录的插件
 
-本仓库当前收录 **18 个第三方高价值插件**（来源：本机实际使用盘点，见
+本仓库当前收录 **19 个第三方高价值插件**（来源：本机实际使用盘点与社区提交，见
 [`docs/09-local-plugin-inventory.md`](docs/09-local-plugin-inventory.md)）：
 
 | 类别 | 插件 |
 |------|------|
-| 记忆/运维 | dsh-auto-memory、dsh-undo-savepoint、dsh-config-manager、dsh-plugin-sync、dsh-plugin-manager |
+| 记忆/运维 | dsh-auto-memory、dsh-undo-savepoint、dsh-config-manager、dsh-plugin-sync、dsh-plugin-manager、[dsh-version-guard](https://github.com/skyjjgw/dsh-version-guard) |
 | 市场/商店 | dshmarket、dsh-workshop |
 | 开发工具 | dsh-mcp-manager、dsh-browser、dsh-lsp-actions、dsh-inspiration-deck-workshop |
 | 工作流 | dsh-automation、dsh-chinese-mode、dsh-web-ui-notify |

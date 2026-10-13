@@ -1,0 +1,18 @@
+{
+  "name": "dsh-version-guard",
+  "owner": "skyjjgw",
+  "fullName": "skyjjgw/dsh-version-guard",
+  "url": "https://github.com/skyjjgw/dsh-version-guard",
+  "description": "记录插件版本与 profile 配置快照，在 DSH 无法启动时通过独立恢复页回退到已知可用配置。",
+  "tags": [
+    "dev"
+  ],
+  "license": "MIT",
+  "language": "JavaScript",
+  "github": "skyjjgw/dsh-version-guard",
+  "audit": {
+    "date": "2026-10-13",
+    "reviewer": "skyjjgw",
+    "notes": "Original source is readable and MIT licensed. No package dependencies or install/build lifecycle scripts. Recovery writes profile composition files and local snapshots. Explicit dependency synchronization spawns pnpm install --ignore-scripts; local HTTP recovery uses a request token. No external API credentials are required. Structural and sandbox recovery checks passed; host-version compatibility has not been certified."
+  }
+}

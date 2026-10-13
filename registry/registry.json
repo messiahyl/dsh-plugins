@@ -3,9 +3,9 @@
     "schemaVersion": 1,
     "generatedAt": "stable",
     "source": "https://gitee.com/messiahyl/dsh-plugins",
-    "count": 18,
+    "count": 19,
     "localCount": 0,
-    "thirdPartyCount": 18,
+    "thirdPartyCount": 19,
     "archivedCount": 0
   },
   "plugins": [
@@ -365,6 +365,29 @@
       ],
       "license": "MIT",
       "language": "TypeScript"
+    },
+    {
+      "name": "dsh-version-guard",
+      "owner": "skyjjgw",
+      "fullName": "skyjjgw/dsh-version-guard",
+      "url": "https://github.com/skyjjgw/dsh-version-guard",
+      "description": "记录插件版本与 profile 配置快照，在 DSH 无法启动时通过独立恢复页回退到已知可用配置。",
+      "stars": 0,
+      "forks": 0,
+      "openIssues": 0,
+      "archived": false,
+      "fork": false,
+      "source": "third-party",
+      "verified": false,
+      "install": {
+        "github": "skyjjgw/dsh-version-guard"
+      },
+      "archive": null,
+      "tags": [
+        "dev"
+      ],
+      "license": "MIT",
+      "language": "JavaScript"
     },
     {
       "name": "dsh-web-ui-notify",
